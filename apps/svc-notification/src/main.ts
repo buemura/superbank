@@ -14,8 +14,14 @@ async function connectMicroservice(app: INestApplication) {
           urls: [queue.url],
           queue: queue.queueName,
           queueOptions: queue.queueOptions,
-          noAssert: true,
+          noAssert: false,
           noAck: false,
+          persistent: true,
+          deserializer: {
+            deserialize(value) {
+              return { pattern: queue, data: value };
+            },
+          },
         },
       },
       { inheritAppConfig: true },

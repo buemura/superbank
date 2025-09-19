@@ -7,7 +7,7 @@ import {
   pgEnum,
 } from 'drizzle-orm/pg-core';
 
-export const preferedChannelEnum = pgEnum('prefered_channel', [
+export const preferredChannelEnum = pgEnum('prefered_channel', [
   'email',
   'in_app',
   'all',
@@ -20,7 +20,7 @@ export const usersTable = pgTable(
     userId: varchar('user_id', { length: 100 }).notNull().unique(),
     name: varchar('name', { length: 255 }).notNull(),
     email: varchar('email', { length: 255 }).notNull().unique(),
-    preferedChannel: preferedChannelEnum('prefered_channel')
+    preferredChannel: preferredChannelEnum('preferred_channel')
       .default('all')
       .notNull(),
     createdAt: timestamp('created_at', { withTimezone: true })

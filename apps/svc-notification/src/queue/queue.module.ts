@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 
+import { QueueController } from './queue.controller';
 import { QUEUE_SERVICE, QueueService } from './queue.service';
 
 @Module({
+  controllers: [QueueController],
   providers: [
     {
       provide: QUEUE_SERVICE,
