@@ -34,6 +34,6 @@ export const emailNotificationsTable = pgTable(
       .notNull(),
   },
   (table) => ({
-    userIdx: index('notifications_user_id_idx').on(table.userId),
+    userIdx: index('email_notifications_user_id_idx').on(table.userId),
   }),
 );

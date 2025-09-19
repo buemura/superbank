@@ -33,6 +33,6 @@ export const inAppNotificationsTable = pgTable(
       .notNull(),
   },
   (table) => ({
-    userIdx: index('notifications_user_id_idx').on(table.userId),
+    userIdx: index('in_app_notifications_user_id_idx').on(table.userId),
   }),
 );
