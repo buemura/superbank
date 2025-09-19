@@ -2,25 +2,52 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
-import { queues } from '@/queue/constants';
+import { queues } from '@/queue/queues';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function connectMicroservice(app: INestApplication) {
-  for (const queue of queues) {
+  for (const q of queues) {
     app.connectMicroservice<MicroserviceOptions>(
       {
         transport: Transport.RMQ,
         options: {
-          urls: [queue.url],
-          queue: queue.queueName,
-          queueOptions: queue.queueOptions,
-          noAssert: false,
+          urls: [q.url],
+          queue: q.queueName,
+          queueOptions: q.queueOptions,
           noAck: false,
-          persistent: true,
+          prefetchCount: 10,
+          // Wrap non-Nest messages so @EventPattern('<queueName>') works
           deserializer: {
-            deserialize(value) {
-              return { pattern: queue, data: value };
+            deserialize(message: any) {
+              // message is the amqplib delivery { content, fields, properties, ... }
+              const raw =
+                message?.content instanceof Buffer
+                  ? message.content.toString()
+                  : (message?.content ?? message);
+
+              let parsed: any;
+              try {
+                parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+              } catch {
+                parsed = raw;
+              }
+
+              // If publisher already sent a Nest packet, pass it through
+              if (
+                parsed &&
+                typeof parsed === 'object' &&
+                'pattern' in parsed &&
+                'data' in parsed
+              ) {
+                return parsed;
+              }
+
+              // Otherwise, force pattern to the queue name and data to parsed payload
+              return {
+                pattern: q.queueName, // <-- string pattern expected by @EventPattern
+                data: parsed,
+              };
             },
           },
         },

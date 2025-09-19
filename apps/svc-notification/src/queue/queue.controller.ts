@@ -2,6 +2,7 @@ import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { QUEUE_SERVICE, QueueService } from './queue.service';
+import { EVENTS_EXCHANGE } from './queues';
 
 class PublishMessageDto {
   @ApiProperty()
@@ -22,7 +23,7 @@ export class QueueController {
   @Post('publish')
   publishMessage(@Body() body: PublishMessageDto): void {
     this.queueService.publishMessage(
-      body?.exchange ?? '',
+      body?.exchange ?? EVENTS_EXCHANGE,
       body.routingKey,
       body.message,
     );

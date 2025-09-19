@@ -12,7 +12,7 @@ import {
   TRANSFER_FAILED_EVENT,
   TRANSFER_REQUESTED_EVENT,
   USER_UPDATED_EVENT,
-} from '@/queue/constants';
+} from '@/queue/queues';
 import { NotificationService } from './notification.service';
 
 @Controller()
