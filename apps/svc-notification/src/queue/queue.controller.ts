@@ -1,6 +1,16 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { QUEUE_SERVICE, QueueService } from './queue.service';
+
+class PublishMessageDto {
+  @ApiProperty()
+  exchange: string;
+  @ApiProperty()
+  routingKey: string;
+  @ApiProperty()
+  message: any;
+}
 
 @Controller('queue')
 export class QueueController {
@@ -9,12 +19,10 @@ export class QueueController {
     private readonly queueService: QueueService,
   ) {}
 
-  @Post()
-  publishMessage(
-    @Body() body: { exchange: string; routingKey: string; message: any },
-  ): void {
+  @Post('publish')
+  publishMessage(@Body() body: PublishMessageDto): void {
     this.queueService.publishMessage(
-      body.exchange,
+      body?.exchange ?? '',
       body.routingKey,
       body.message,
     );
