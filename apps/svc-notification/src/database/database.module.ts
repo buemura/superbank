@@ -1,12 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import {
-  EMAIL_NOTIFICATION_REPOSITORY,
-  IN_APP_NOTIFICATION_REPOSITORY,
-} from '@/repositories/notification.repository';
+import { NOTIFICATION_REPOSITORY } from '@/repositories/notification.repository';
 import { USER_REPOSITORY } from '@/repositories/user.repository';
-import { DrizzleEmailNotificationRepository } from './drizzle/repositories/email-notification.repository';
-import { DrizzleInAppNotificationRepository } from './drizzle/repositories/in-app-notification.repository';
+import { DrizzleNotificationRepository } from './drizzle/repositories/notification.repository';
 import { DrizzleUserRepository } from './drizzle/repositories/user.repository';
 
 @Module({
@@ -16,18 +12,10 @@ import { DrizzleUserRepository } from './drizzle/repositories/user.repository';
       useClass: DrizzleUserRepository,
     },
     {
-      provide: EMAIL_NOTIFICATION_REPOSITORY,
-      useClass: DrizzleEmailNotificationRepository,
-    },
-    {
-      provide: IN_APP_NOTIFICATION_REPOSITORY,
-      useClass: DrizzleInAppNotificationRepository,
+      provide: NOTIFICATION_REPOSITORY,
+      useClass: DrizzleNotificationRepository,
     },
   ],
-  exports: [
-    USER_REPOSITORY,
-    EMAIL_NOTIFICATION_REPOSITORY,
-    IN_APP_NOTIFICATION_REPOSITORY,
-  ],
+  exports: [USER_REPOSITORY, NOTIFICATION_REPOSITORY],
 })
 export class DatabaseModule {}

@@ -1,25 +1,12 @@
-import { EmailNotification, InAppNotification } from '@/entities/notification';
-import {
-  EmailNotificationStatus,
-  InAppNotificationStatus,
-} from '@/enums/notification-status.enum';
+import { Notification } from '@/entities/notification';
+import { NotificationStatus } from '@/enums/notification-status.enum';
 
-export const EMAIL_NOTIFICATION_REPOSITORY = 'EMAIL_NOTIFICATION_REPOSITORY';
+export const NOTIFICATION_REPOSITORY = 'NOTIFICATION_REPOSITORY';
 
-export interface EmailNotificationRepository {
-  create(data: EmailNotification): void | Promise<void>;
-  updateStatus(
+export interface NotificationRepository {
+  create(data: Notification): Notification | Promise<Notification>;
+  update(
     id: number,
-    status: EmailNotificationStatus,
-  ): void | Promise<void>;
-}
-
-export const IN_APP_NOTIFICATION_REPOSITORY = 'IN_APP_NOTIFICATION_REPOSITORY';
-
-export interface InAppNotificationRepository {
-  create(data: InAppNotification): void | Promise<void>;
-  updateStatus(
-    id: number,
-    status: InAppNotificationStatus,
-  ): void | Promise<void>;
+    status: NotificationStatus,
+  ): Notification | Promise<Notification>;
 }

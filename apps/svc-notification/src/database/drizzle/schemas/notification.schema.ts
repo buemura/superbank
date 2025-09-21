@@ -1,6 +1,7 @@
 import {
   index,
   integer,
+  jsonb,
   pgEnum,
   pgTable,
   timestamp,
@@ -8,23 +9,25 @@ import {
 } from 'drizzle-orm/pg-core';
 import { usersTable } from './user.schema';
 
-export const inAppNotificationStatusEnum = pgEnum(
-  'in_app_notification_status',
-  ['pending', 'sent', 'read', 'failed', 'canceled'],
-);
+export const notificationStatusEnum = pgEnum('notification_status', [
+  'pending',
+  'sent',
+  'read',
+  'failed',
+  'canceled',
+]);
 
-export const inAppNotificationsTable = pgTable(
-  'in_app_notifications',
+export const notificationsTable = pgTable(
+  'notifications',
   {
     id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
     userId: varchar('user_id', { length: 100 })
       .notNull()
       .references(() => usersTable.userId, { onDelete: 'cascade' }),
-    status: inAppNotificationStatusEnum('status').notNull().default('pending'),
-    title: varchar('title', { length: 255 }).notNull(),
-    content: varchar('content', { length: 255 }).notNull(),
+    status: notificationStatusEnum('status').notNull().default('pending'),
+    channel: varchar('channel', { length: 20 }).notNull(),
+    metadata: jsonb('metadata'),
     sentAt: timestamp('sent_at', { withTimezone: true }),
-    readAt: timestamp('read_at', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -33,6 +36,6 @@ export const inAppNotificationsTable = pgTable(
       .notNull(),
   },
   (table) => ({
-    userIdx: index('in_app_notifications_user_id_idx').on(table.userId),
+    userIdx: index('notifications_user_id_idx').on(table.userId),
   }),
 );

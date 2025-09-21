@@ -1,26 +1,14 @@
-import {
-  EmailNotificationStatus,
-  InAppNotificationStatus,
-} from '@/enums/notification-status.enum';
+import { NotificationStatus } from '@/enums/notification-status.enum';
 
-export class EmailNotification {
+export class Notification {
   id?: number;
   userId: string;
-  status: EmailNotificationStatus;
-  content: any;
+  status: NotificationStatus;
+  channel: string;
+  metadata: {
+    [key: string]: string;
+  };
   sentAt?: Date | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export class InAppNotification {
-  id?: number;
-  userId: string;
-  status: InAppNotificationStatus;
-  title: string;
-  content: string;
-  sentAt?: Date | null;
-  readAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }

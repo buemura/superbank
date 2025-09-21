@@ -14,7 +14,7 @@ export class DrizzleUserRepository implements UserRepository {
     this.db = drizzle(process.env.DATABASE_URL!);
   }
 
-  private mapToUserEntity(dbUser: any): User {
+  private mapToEntity(dbUser: any): User {
     return {
       ...dbUser,
       preferredChannel:
@@ -28,7 +28,7 @@ export class DrizzleUserRepository implements UserRepository {
       .from(usersTable)
       .where(eq(usersTable.userId, userId));
 
-    return this.mapToUserEntity(user) || null;
+    return this.mapToEntity(user) || null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -36,7 +36,7 @@ export class DrizzleUserRepository implements UserRepository {
       .select()
       .from(usersTable)
       .where(eq(usersTable.email, email));
-    return this.mapToUserEntity(user) || null;
+    return this.mapToEntity(user) || null;
   }
 
   async create(data: User): Promise<User> {
@@ -48,7 +48,7 @@ export class DrizzleUserRepository implements UserRepository {
           UserPreferredChannel[data.preferredChannel.toUpperCase()],
       })
       .returning();
-    return this.mapToUserEntity(user) || null;
+    return this.mapToEntity(user) || null;
   }
 
   async update(data: UpdateUserDto): Promise<User | null> {
@@ -75,6 +75,6 @@ export class DrizzleUserRepository implements UserRepository {
       .where(eq(usersTable.userId, data.userId))
       .returning();
 
-    return user ? this.mapToUserEntity(user) : null;
+    return user ? this.mapToEntity(user) : null;
   }
 }

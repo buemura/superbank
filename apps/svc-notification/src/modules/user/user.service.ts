@@ -14,6 +14,10 @@ export class UserService {
     private readonly userRepository: UserRepository,
   ) {}
 
+  async getUserById(userId: string): Promise<User | null> {
+    return this.userRepository.findByUserId(userId);
+  }
+
   async createUser(input: CreateUserDto): Promise<User> {
     return this.userRepository.create({
       userId: input.userId,
