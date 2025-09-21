@@ -1,15 +1,18 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 import { QUEUE_SERVICE, QueueService } from './queue.service';
 import { EVENTS_EXCHANGE } from './queues';
 
 class PublishMessageDto {
   @ApiProperty()
-  exchange: string;
-  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
   routingKey: string;
+
   @ApiProperty()
+  @IsNotEmpty()
   message: any;
 }
 
@@ -23,7 +26,7 @@ export class QueueController {
   @Post('publish')
   publishMessage(@Body() body: PublishMessageDto): void {
     this.queueService.publishMessage(
-      body?.exchange ?? EVENTS_EXCHANGE,
+      EVENTS_EXCHANGE,
       body.routingKey,
       body.message,
     );

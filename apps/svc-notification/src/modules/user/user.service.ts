@@ -22,4 +22,13 @@ export class UserService {
       preferredChannel: input.preferredChannel,
     });
   }
+
+  async updateUser(input: CreateUserDto): Promise<User | null> {
+    return this.userRepository.update({
+      userId: input.userId,
+      name: input.name,
+      email: input.email,
+      preferredChannel: input.preferredChannel,
+    });
+  }
 }

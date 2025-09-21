@@ -11,21 +11,12 @@ import {
   TRANSFER_COMPLETED_EVENT,
   TRANSFER_FAILED_EVENT,
   TRANSFER_REQUESTED_EVENT,
-  USER_UPDATED_EVENT,
 } from '@/queue/queues';
 import { NotificationService } from './notification.service';
 
 @Controller()
 export class NotificationConsumer {
   constructor(private readonly notificationService: NotificationService) {}
-
-  @EventPattern(USER_UPDATED_EVENT, Transport.RMQ)
-  async userUpdated(@Payload() payload: any, @Ctx() ctx: RmqContext) {
-    console.log(`[CONSUMER] ::`, { queue: USER_UPDATED_EVENT, payload });
-    const channel = ctx.getChannelRef();
-    const message = ctx.getMessage();
-    channel.ack(message);
-  }
 
   @EventPattern(TRANSFER_REQUESTED_EVENT, Transport.RMQ)
   async transferRequested(@Payload() payload: any, @Ctx() ctx: RmqContext) {
