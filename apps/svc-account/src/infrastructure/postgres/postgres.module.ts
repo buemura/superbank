@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Account } from 'src/domain/account/account.entity';
+import { AccountRepositoryService } from './repository/account-repository.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { Account } from 'src/domain/account/account.entity';
       }),
     }),
   ],
-  providers: [],
-  exports: [],
+  providers: [AccountRepositoryService],
+  exports: [AccountRepositoryService],
 })
 export class PostgresModule {}
